@@ -182,10 +182,10 @@ prev=100;
 curr=0;
 %run the sim until steady state force is reached
 while abs((prev-curr)/curr)>1e-5
-[t,y]=ode15s(@(t,y)model(t,y,l_input,x),t,y0,options);
+[t,y]=ode15s(@(t,y)model(t,y,l_input,x,mets),t,y0,options);
 y0=y(end,:);
 prev=curr;
-[~,curr]=model(t(end),y0,l_input,x);
+[~,curr]=model(t(end),y0,l_input,x,mets);
 
 end
 
