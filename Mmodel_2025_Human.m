@@ -104,7 +104,7 @@ Lr=2.2*0.85;
 ADP=0.036; % mM (based on Tran et al. 2010)
 
 % input metabolite concentrations
-if nargin>5
+if nargin>4
     ATP=met(1); % (mM) 
     Pi=met(2); % (mM) 
 else
