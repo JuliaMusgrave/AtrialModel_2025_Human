@@ -2,7 +2,7 @@
 % parameters
 % Inputs:
 %       - model: function handle to the muscle model (should output k3 and
-%           k-3). CURRENTLY NOT USED
+%           k-3).
 %       - params: structure representing the input parameters for the
 %           muscle model (should have M_frac element)
 %       - c_input: 2xn array representing the time and calcium data to 
@@ -15,7 +15,7 @@
 % Following parameters are defined in the code:
 % starting SL (2.2), Temp (37), viscosity and mass for isotonic,
 % params.mode (both sarcomere and loop modes used), ADP (0.036), XB
-% density (0.25 mol/m^3), muscle model function (@Mmodel_2025_Human)
+% density (0.25 mol/m^3)
 
 % Author: Julia Musgrave
 % Date: June 2024
@@ -91,18 +91,17 @@ for loop=1:10
     ADP=0.036;
     G_ATP=G_ATP0+R*T*log((ADP/1000*params.met(2)/1000)/(params.met(1)/1000)); % convert mets to mol/L
     A=1 + (y(:,8)/2.3-1)*params.xb(8)-y(:,2)-y(:,1)-y(:,7);
-    ATPase_rate=(k3.*y(:,2)-k_3.*A)*0.25*params.M_frac;
-    WL.Energy(loop)=abs(trapz(t,ATPase_rate))*-G_ATP; % unitless?
+    ATPase_rate=(k3.*y(:,2)-k_3.*A)*0.25*params.M_frac; % s^-1 mol/m^3
+    WL.Energy(loop)=abs(trapz(t,ATPase_rate))*-G_ATP; % kJ/m^3
     
     % other workloop analysis
-    WL.Work(loop)=abs(trapz(y(:,8)/L,F)); % kPa.um?
+    WL.Work(loop)=abs(trapz(y(:,8)/L,F)); % kPa = kJ/m^3
     WL.shortening(loop)=100-min(y(:,8))/L*100; % percent of Lo
-    %WL.velocity(loop)=-min(movmean(dL,100))/L; % muscle length /s 
-    % finding max slop of the SL is much more reliable re noise
+    % finding max slop of the SL is more reliable for velocity re noise
     WL.velocity(loop)=-min(gradient(y(:,8),0.001))/L; % muscle length /s 
 
     
-    % save time cours data
+    % save time course data
     WL.length{loop}=y(:,8);
     WL.stress{loop}=F;
     WL.time{loop}=t;

@@ -1,6 +1,6 @@
 %
 
-% Function describing the final ODE cross-bridge model parameterised human
+% Function describing the final ODE cross-bridge model parameterised to human
 % atrial data
 %
 % Model is fully activated so has no Ca2+ dependence, also no passive force
@@ -24,7 +24,7 @@
 %           params = [k1 k-1' k2' k-2' k3' phi_x phi_v phi_l K Ks phi_s-2 phi_s3 K_ATP K_Pi];
 %           no_params = 14
 %       - met: 1x2 array containing ATP and Pi concentrations (mM) -
-%       optional 5 mM ATP and 1 mM Pi used as baseline
+%       optional, 5 mM ATP and 1 mM Pi used as default
 % Outputs:
 %       - dydt: system of odes to solve 
 %       - F: active stress solution of the model (kPa)

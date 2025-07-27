@@ -1,6 +1,7 @@
 % Script to run Musgrave et al. 2025 human atrial muscle model with 
 % non-diabetic or diabetic parameters.
-% Demonstrates isometric twitches and work-loops. 
+% Demonstrates isometric twitches, work-loops and length perturbations with 
+% the cross-bridge model alone.
 
 % Author: Julia Musgrave
 % Date: September 2024

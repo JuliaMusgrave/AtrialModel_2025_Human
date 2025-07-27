@@ -1,3 +1,6 @@
+% Quick function to calculate and return the amplitude and duration of a
+% given twitch. Duration based on time to 95% relaxation
+
 function [amp,t95]=twitch_analysis(twitch,t)
 
     amp=max(twitch)-min(twitch);

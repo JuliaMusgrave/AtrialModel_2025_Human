@@ -18,10 +18,14 @@
 % used in a fitting algorithm to find best parameters
 %
 % Inputs:
-%       - params: vector of fitting paramaters for the model
-%           params = [k1 k2 k3i k_1 k_2 K phi_x phi_v phi_s phi_l]
-%           no_params = 10
-%       - sd: 
+%       - params: vector of 14 paramaters for the model
+%           [k1 k_1 k2 k_2 k3 phi_x phi_v phi_l K Ks phi_s? phi_s? kd_ATP kd_Pi]
+%           phi_s? for the two strain dep rates must be in same order as rates
+%       - sd: boolean array represnting which rates have strain dependence
+%           [k1 k_1 k2 k_2 k3] equal 1 if strain dep on that rate, 0 otherwise
+%       - md: code for which type of metabolite dependence for ATP and Pi
+%           1 = direct for both, 2 = rapid eq for Pi, 3 = rapid eq for ATP,
+%           4 = rapid equilbrium for both
 %       - met: experimental metabolite concentrations [ATP, Pi] (mM)
 %       - data: 1D array of complex modulus to fit to (MPa) (optional)
 %       - freqs: 1D array of the sampled frequencies (Hz) (optional)
@@ -72,8 +76,8 @@ Pi=met(2);  % mM
 % find locations where sd are nonzero and assign phi_s values there
 i=find(sd);
 if length(i)==2    
-    sd(i(1))=params(11);
-    sd(i(2))=params(12);    
+    sd(i(1))=params(11); % first phi_s?
+    sd(i(2))=params(12); % second phi_s?
 else
     sd=sd*params(11);
 end

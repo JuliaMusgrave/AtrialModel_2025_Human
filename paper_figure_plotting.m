@@ -933,7 +933,6 @@ end
 
 params.ca=load('thin_fil_ps.mat','ca').ca; % Land Human parameters
 if ~Ca % ND Ca model/input
-    %ca_T=load('Ca_transients_paper.mat','Ca_ND_smooth').Ca_ND_smooth;
     ca_T=load('Ca_transients_paper.mat','nd_Ca').nd_Ca;
     params.ca(1)=0.33; % from Jones et al.
 else % D Ca model/input

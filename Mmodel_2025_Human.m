@@ -3,7 +3,7 @@
 % Function describing an ODE muscle model for human atria 
 % published by Musgrave et al in 2025.
 %
-% Ca2+ dependencies are based closely on those of Land et al. (2017)
+% Ca2+ dependencies are based closely on those of Land et al. (2017) and
 %
 % XB strain equations based on Razumova et al. (1999) 3 state stiffeness 
 % distortion model. Sarcomere length dependence on available cross-bridge 
@@ -48,7 +48,7 @@
 
 
 
-function [dydt, F, Fp,k3,k_3] = Mmodel_2025_Human(t,y,s,c,params,met)
+function [dydt, F, Fp,k3,k_3] = Mmodel_2025_Human(t,y,s,c,params)
 
 % ------------------ initialising state variables -----------------------
 if nargin==0 
@@ -104,13 +104,9 @@ Lr=2.2*0.85;
 ADP=0.036; % mM (based on Tran et al. 2010)
 
 % input metabolite concentrations
-if nargin>4
-    ATP=met(1); % (mM) 
-    Pi=met(2); % (mM) 
-else
-    ATP=params.met(1);
-    Pi=params.met(2);
-end
+ATP=params.met(1);
+Pi=params.met(2);
+
 
 
 % ------------ getting sarcomere length, velocity and Ca -----------------
