@@ -23,7 +23,89 @@
 
 clear
 
-%% First figures: plotting fits for both models
+%% Figure2 - Passive model fit
+red=[0.85,0.325,0.098];
+
+figure('Position',[149,110,792,205])
+tiledlayout(1,3,'TileSpacing','compact','Padding','tight')
+
+%CM first
+load('ave_human_fitting_data.mat','D_pass_data','ND_pass_data','freqs')
+fs=logspace(-1,2,100);
+Yn=passive_model_linear(load('ND_pass_fit','xPFL').xPFL);
+Yd=passive_model_linear(load('D_pass_fit','xPFL').xPFL);
+
+nexttile(1)
+errorbar(freqs,real(ND_pass_data{1,2}),ND_pass_data{2,2},'.','LineStyle','none','MarkerSize',12,'Color',[0 0 0])
+hold on
+ax=gca;
+ax.XScale='log';
+errorbar(freqs,real(D_pass_data{1,2}),D_pass_data{2,2},'.','LineStyle','none','MarkerSize',12,'Color',red)
+semilogx(fs,real(Yn),'k-','LineWidth',1)
+semilogx(fs,real(Yd),'LineWidth',1,'Color',red)
+xlim([0.1 99.9])
+xticks([0.1,1,10,99.9])
+xticklabels({'0.1','1','10','100'})
+xlabel('Frequency (Hz)')
+ylabel('Elastic Modulus (MPa)      ')
+box off
+text(0.02,max(ylim),'A','FontSize',16,'FontWeight','bold')
+
+nexttile(2)
+errorbar(freqs,imag(ND_pass_data{1,2}),ND_pass_data{3,2},'.','LineStyle','none','MarkerSize',12,'Color',[0 0 0])
+hold on
+ax=gca;
+ax.XScale='log';
+errorbar(freqs,imag(D_pass_data{1,2}),D_pass_data{3,2},'.','LineStyle','none','MarkerSize',12,'Color',red)
+semilogx(fs,imag(Yn),'k-','LineWidth',1)
+semilogx(fs,imag(Yd),'LineWidth',1,'Color',red)
+xlim([0.1 99.9])
+xticks([0.1,1,10,99.9])
+xticklabels({'0.1','1','10','100'})
+xlabel('Frequency (Hz)')
+ylabel('Viscous Modulus (MPa)      ')
+box off
+text(0.018,max(ylim),'B','FontSize',16,'FontWeight','bold')
+
+% FL fit
+SL=[1 0.95 0.9 0.85];
+SLm=linspace(min(SL),max(SL),100);
+for i=1:100
+    Fpn(i)=passive_model_SS(SLm(i)*2.2,load('ND_pass_fit','xPFL').xPFL);
+    Fpd(i)=passive_model_SS(SLm(i)*2.2,load('D_pass_fit','xPFL').xPFL);
+end
+nexttile(3)
+errorbar(SL,ND_pass_data{4,2},ND_pass_data{5,2},'.','LineStyle','none','MarkerSize',14,'Color',[0 0 0])
+hold on
+errorbar(SL,D_pass_data{4,2},D_pass_data{5,2},'.','LineStyle','none','MarkerSize',14,'Color',red)
+
+plot(SLm,Fpn,'Color',[0 0 0],'LineWidth',2)
+plot(SLm,Fpd,'Color',red,'LineWidth',2)
+ylabel('Passive stress (kPa)    ')
+xlabel('L/L_o')
+legend('Non-diabetic','Diabetic','','','Location','northwest')
+box off
+text(0.827,max(ylim),'C','FontSize',16,'FontWeight','bold')
+
+%% Figure 3 - plot Ca inputs
+
+figure('Position',[100, 100,411,285])
+
+% get Ca data
+ca_nd=load('Ca_transients_paper.mat','nd_Ca').nd_Ca;
+ca_d=load('Ca_transients_paper.mat','d_Ca').d_Ca;
+t=linspace(0,1,1001);
+
+plot(t,ca_nd,'k',"LineWidth",2)
+hold on
+plot(t,ca_d,"LineWidth",2)
+box off
+ylabel('[Ca^2^+] (\muM)')
+xlabel('Time (s)')
+legend('Non-diabetic','Diabetic')
+ylim([0 0.6])
+
+%% Figure 4: plotting fits for both XB models
 load('ave_human_fitting_data.mat', 'D_xb_data','ND_xb_data','freqs')
 
 freqs=freqs(1:11); % didn't fit to 100 Hz
@@ -88,89 +170,7 @@ end
     text(111,0.25,{'0.1A','1A','0P','B','10P'},'FontSize',12)
 
 
-%% Passive model fit
-red=[0.85,0.325,0.098];
-
-figure('Position',[149,110,792,205])
-tiledlayout(1,3,'TileSpacing','compact','Padding','tight')
-
-%CM first
-load('ave_human_fitting_data.mat','D_pass_data','ND_pass_data','freqs')
-fs=logspace(-1,2,100);
-Yn=passive_model_linear(load('ND_pass_fit','xPFL').xPFL);
-Yd=passive_model_linear(load('D_pass_fit','xPFL').xPFL);
-
-nexttile(1)
-errorbar(freqs,real(ND_pass_data{1,2}),ND_pass_data{2,2},'.','LineStyle','none','MarkerSize',12,'Color',[0 0 0])
-hold on
-ax=gca;
-ax.XScale='log';
-errorbar(freqs,real(D_pass_data{1,2}),D_pass_data{2,2},'.','LineStyle','none','MarkerSize',12,'Color',red)
-semilogx(fs,real(Yn),'k-','LineWidth',1)
-semilogx(fs,real(Yd),'LineWidth',1,'Color',red)
-xlim([0.1 99.9])
-xticks([0.1,1,10,99.9])
-xticklabels({'0.1','1','10','100'})
-xlabel('Frequency (Hz)')
-ylabel('Elastic Modulus (MPa)      ')
-box off
-text(0.02,max(ylim),'A','FontSize',16,'FontWeight','bold')
-
-nexttile(2)
-errorbar(freqs,imag(ND_pass_data{1,2}),ND_pass_data{3,2},'.','LineStyle','none','MarkerSize',12,'Color',[0 0 0])
-hold on
-ax=gca;
-ax.XScale='log';
-errorbar(freqs,imag(D_pass_data{1,2}),D_pass_data{3,2},'.','LineStyle','none','MarkerSize',12,'Color',red)
-semilogx(fs,imag(Yn),'k-','LineWidth',1)
-semilogx(fs,imag(Yd),'LineWidth',1,'Color',red)
-xlim([0.1 99.9])
-xticks([0.1,1,10,99.9])
-xticklabels({'0.1','1','10','100'})
-xlabel('Frequency (Hz)')
-ylabel('Viscous Modulus (MPa)      ')
-box off
-text(0.018,max(ylim),'B','FontSize',16,'FontWeight','bold')
-
-% FL fit
-SL=[1 0.95 0.9 0.85];
-SLm=linspace(min(SL),max(SL),100);
-for i=1:100
-    Fpn(i)=passive_model_SS(SLm(i)*2.2,load('ND_pass_fit','xPFL').xPFL);
-    Fpd(i)=passive_model_SS(SLm(i)*2.2,load('D_pass_fit','xPFL').xPFL);
-end
-nexttile(3)
-errorbar(SL,ND_pass_data{4,2},ND_pass_data{5,2},'.','LineStyle','none','MarkerSize',14,'Color',[0 0 0])
-hold on
-errorbar(SL,D_pass_data{4,2},D_pass_data{5,2},'.','LineStyle','none','MarkerSize',14,'Color',red)
-
-plot(SLm,Fpn,'Color',[0 0 0],'LineWidth',2)
-plot(SLm,Fpd,'Color',red,'LineWidth',2)
-ylabel('Passive stress (kPa)    ')
-xlabel('L/L_o')
-legend('Non-diabetic','Diabetic','','','Location','northwest')
-box off
-text(0.827,max(ylim),'C','FontSize',16,'FontWeight','bold')
-
-%% plot Ca inputs
-
-figure('Position',[100, 100,411,285])
-
-% get Ca data
-ca_nd=load('Ca_transients_paper.mat','nd_Ca').nd_Ca;
-ca_d=load('Ca_transients_paper.mat','d_Ca').d_Ca;
-t=linspace(0,1,1001);
-
-plot(t,ca_nd,'k',"LineWidth",2)
-hold on
-plot(t,ca_d,"LineWidth",2)
-box off
-ylabel('[Ca^2^+] (\muM)')
-xlabel('Time (s)')
-legend('Non-diabetic','Diabetic')
-ylim([0 0.6])
-
-%% Isometric twitch - trabecula/muscle vs myocyte model
+%% Figure 5: Isometric twitch - trabecula/muscle vs myocyte model
 
 red=[0.85,0.325,0.098];
 
@@ -281,7 +281,7 @@ n_sys=max(F_twitch(:,1));
 % d_t/n_t
 % d_sys/n_sys
 
-%% Work loops - baseline w complete models
+%% Figure 6 & 7: Work loops - baseline w complete models
 
 red=[0.85,0.325,0.098];
 
@@ -393,7 +393,7 @@ text(-0.25,max(ylim),'F','FontSize',18,'FontWeight','bold')
 
 
 
-%% Raised Pi
+%% Figure 8: Raised Pi
 clear F_twitch max_eff max_energy max_pow max_short max_vel max_work
 red=[0.85,0.325,0.098];
 
@@ -530,7 +530,7 @@ xlabel('[P_i] (mM)')
 % d10_amp/d1_amp
 % n10_amp/n1_amp
 
-%% Lowered ATP
+%% Figure 9: Lowered ATP
 
 clear F_twitch max_eff max_energy max_pow max_short max_vel max_work
 red=[0.85,0.325,0.098];
@@ -667,11 +667,8 @@ text(-3,max(ylim),'G','FontSize',12,'FontWeight','bold')
 % n1_amp/n5_amp
 % d1_t/d5_t
 % n1_t/n5_t
-%% muscle sensitivity analysis
 
-full_sensitivity_for_paper(false)
-
-%% XB/Ca model matrix
+%% Figure 10: XB/Ca model matrix
 bf=colororder;
 [blue, red, green, purple]=deal(bf(1,:),bf(2,:),bf(5,:),bf(4,:));
 
@@ -853,6 +850,10 @@ text(-0.25,max(ylim),'G','FontSize',12,'FontWeight','bold')
 % d_t/n_t
 % x_t/n_t
 % c_t/n_t
+
+%% Figure 11: muscle sensitivity analysis
+
+full_sensitivity_for_paper(false)
 
 %% helper functions
 
