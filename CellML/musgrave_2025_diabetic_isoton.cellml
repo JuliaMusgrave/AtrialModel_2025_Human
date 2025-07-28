@@ -1,0 +1,817 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<model name="musgrave_2025_diabetic_isoton" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="diabetic_calcium.cellml">
+        <component component_ref="Ca_data" name="Ca_transient"/>
+    </import>
+    <units name="kilopascal">
+        <unit prefix="kilo" units="pascal"/>
+    </units>
+    <units name="gigapascal_per_metre">
+        <unit prefix="giga" units="pascal"/>
+        <unit exponent="-1" units="metre"/>
+    </units>
+    <units name="gigapascal_second_per_metre">
+        <unit prefix="giga" units="pascal"/>
+        <unit units="second"/>
+        <unit exponent="-1" units="metre"/>
+    </units>
+    <units name="micrometre">
+        <unit prefix="micro" units="metre"/>
+    </units>
+    <units name="micrometre_per_second">
+        <unit prefix="micro" units="metre"/>
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="per_micrometre">
+        <unit exponent="-1" prefix="micro" units="metre"/>
+    </units>
+    <units name="per_second">
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units name="micromolar">
+        <unit prefix="micro" units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="molar">
+        <unit units="mole"/>
+        <unit exponent="-1" units="litre"/>
+    </units>
+    <units name="kilojoule_per_mole">
+        <unit prefix="kilo" units="joule"/>
+        <unit exponent="-1" units="mole"/>
+    </units>
+    <units name="kilojoule_per_mole_per_kelvin">
+        <unit prefix="kilo" units="joule"/>
+        <unit exponent="-1" units="mole"/>
+        <unit exponent="-1" units="kelvin"/>
+    </units>
+    <units name="kilopascal_second">
+        <unit prefix="kilo" units="pascal"/>
+        <unit units="second"/>
+    </units>
+    <units name="gigapascal_second_per_metre">
+        <unit prefix="giga" units="pascal"/>
+        <unit units="second"/>
+        <unit exponent="-1" units="metre"/>
+    </units>
+    <units name="gigapascal_second2_per_metre">
+        <unit prefix="giga" units="pascal"/>
+        <unit exponent="2" units="second"/>
+        <unit exponent="-1" units="metre"/>
+    </units>
+    <component name="environment">
+        <variable name="time" public_interface="out" units="second"/>
+    </component>
+    <component name="force_generation">
+        <variable name="Fa" public_interface="out" units="kilopascal"/>
+        <variable initial_value="0" name="Fp1" public_interface="out" units="kilopascal"/>
+        <variable name="Fp2" public_interface="out" units="kilopascal"/>
+        <variable name="Ft" public_interface="out" units="kilopascal"/>
+        <variable name="K" units="gigapascal_per_metre"/>
+        <variable initial_value="19500" name="K_myo" units="gigapascal_per_metre"/>
+        <variable initial_value="0.292" name="rho_myo" units="dimensionless"/>
+        <variable initial_value="11.5" name="Kp1" units="gigapascal_per_metre"/>
+        <variable initial_value="0.049" name="mu" units="gigapascal_second_per_metre"/>
+        <variable initial_value="0.42" name="Kp2" units="gigapascal_per_metre"/>
+        <variable initial_value="6.88" name="phi_p" units="dimensionless"/>
+        <variable initial_value="1.87" name="Lr" units="micrometre"/>
+        <variable name="B" public_interface="in" units="dimensionless"/>
+        <variable name="xB" public_interface="in" units="micrometre"/>
+        <variable name="C" public_interface="in" units="dimensionless"/>
+        <variable name="xC" public_interface="in" units="micrometre"/>
+        <variable name="dL" public_interface="in" units="micrometre_per_second"/>
+        <variable name="L" public_interface="in" units="micrometre"/>
+        <variable name="time" public_interface="in" units="second"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>K</ci>
+                <apply>
+                    <times/>
+                    <ci>K_myo</ci>
+                    <ci>rho_myo</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>Fa</ci>
+                <apply>
+                    <times/>
+                    <ci>K</ci>
+                    <apply>
+                        <plus/>
+                        <apply>
+                            <times/>
+                            <ci>B</ci>
+                            <ci>xB</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <ci>C</ci>
+                            <ci>xC</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>Fp1</ci>
+                </apply>
+                <apply>
+                    <times/>
+                    <ci>Kp1</ci>
+                    <apply>
+                        <minus/>
+                        <ci>dL</ci>
+                        <apply>
+                            <divide/>
+                            <ci>Fp1</ci>
+                            <ci>mu</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>Fp2</ci>
+                <apply>
+                    <times/>
+                    <ci>Kp2</ci>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <times/>
+                                <ci>phi_p</ci>
+                                <apply>
+                                    <minus/>
+                                    <ci>L</ci>
+                                    <ci>Lr</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <cn cellml:units="dimensionless">1</cn>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>Ft</ci>
+                <apply>
+                    <plus/>
+                    <ci>Fa</ci>
+                    <ci>Fp1</ci>
+                    <ci>Fp2</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="crossbridge_cycling_rates">
+        <variable name="k1" public_interface="out" units="per_second"/>
+        <variable name="k_1" public_interface="out" units="per_second"/>
+        <variable initial_value="86.27" name="k2" public_interface="out" units="per_second"/>
+        <variable name="k_2" public_interface="out" units="per_second"/>
+        <variable name="k3" public_interface="out" units="per_second"/>
+        <variable name="k_3" public_interface="out" units="per_second"/>
+        <variable initial_value="44.3" name="k1_i" units="per_second"/>
+        <variable initial_value="2.44" name="k_1_i" units="per_second"/>
+        <variable initial_value="93.57" name="k_2_i" units="per_second"/>
+        <variable initial_value="50" name="k3_i" units="per_second"/>
+        <variable initial_value="7.13" name="phi_s1" units="per_micrometre"/>
+        <variable initial_value="199" name="phi_s3" units="per_micrometre"/>
+        <variable initial_value="5e-3" name="k_dATP" units="molar"/>
+        <variable initial_value="-30" name="G_ATP0" units="kilojoule_per_mole"/>
+        <variable initial_value="8.314e-3" name="R" units="kilojoule_per_mole_per_kelvin"/>
+        <variable initial_value="310" name="T" units="kelvin"/>
+        <variable name="G_ATP" units="kilojoule_per_mole"/>
+        <variable name="Pi" public_interface="in" units="molar"/>
+        <variable name="ATP" public_interface="in" units="molar"/>
+        <variable initial_value="36e-6" name="ADP" units="molar"/>
+        <variable name="xB" public_interface="in" units="micrometre"/>
+        <variable name="xC" public_interface="in" units="micrometre"/>
+        <variable name="xC0" public_interface="in" units="micrometre"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>k1</ci>
+                <apply>
+                    <times/>
+                    <ci>k1_i</ci>
+                    <apply>
+                        <exp/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <minus/>
+                                <ci>phi_s1</ci>
+                            </apply>
+                            <ci>xB</ci>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>k_1</ci>
+                <apply>
+                    <times/>
+                    <ci>k_1_i</ci>
+                    <ci>Pi</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>k_2</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>k_2_i</ci>
+                        <ci>k_dATP</ci>
+                    </apply>
+                    <apply>
+                        <plus/>
+                        <ci>k_dATP</ci>
+                        <ci>ATP</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>k3</ci>
+                <apply>
+                    <times/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <times/>
+                            <ci>k3_i</ci>
+                            <ci>ATP</ci>
+                        </apply>
+                        <apply>
+                            <plus/>
+                            <ci>k_dATP</ci>
+                            <ci>ATP</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <exp/>
+                        <apply>
+                            <times/>
+                            <ci>phi_s3</ci>
+                            <apply>
+                                <minus/>
+                                <ci>xC</ci>
+                                <ci>xC0</ci>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>G_ATP</ci>
+                <apply>
+                    <plus/>
+                    <ci>G_ATP0</ci>
+                    <apply>
+                        <times/>
+                        <ci>R</ci>
+                        <ci>T</ci>
+                        <apply>
+                            <ln/>
+                            <apply>
+                                <divide/>
+                                <apply>
+                                    <times/>
+                                    <ci>ADP</ci>
+                                    <ci>Pi</ci>
+                                </apply>
+                                <ci>ATP</ci>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>k_3</ci>
+                <apply>
+                    <divide/>
+                    <apply>
+                        <times/>
+                        <ci>k1</ci>
+                        <ci>k2</ci>
+                        <ci>k3</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k_1</ci>
+                        <ci>k_2</ci>
+                        <apply>
+                            <exp/>
+                            <apply>
+                                <divide/>
+                                <apply>
+                                    <minus/>
+                                    <ci>G_ATP</ci>
+                                </apply>
+                                <apply>
+                                    <times/>
+                                    <ci>R</ci>
+                                    <ci>T</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="thin_filament_regulation">
+        <variable initial_value="0.2" name="CaTn" units="dimensionless"/>
+        <variable initial_value="100" name="k_tn" units="per_second"/>
+        <variable initial_value="0.408" name="Ca50" units="micromolar"/>
+        <variable initial_value="2" name="n_tn" units="dimensionless"/>
+        <variable initial_value="1000" name="k0" units="per_second"/>
+        <variable initial_value="327" name="k_0" units="per_second"/>
+        <variable initial_value="5" name="n_Tm" units="dimensionless"/>
+        <variable initial_value="0.76" name="N" public_interface="out" units="dimensionless"/>
+        <variable name="A" public_interface="in" units="dimensionless"/>
+        <variable name="time" public_interface="in" units="second"/>
+        <variable name="Ca" public_interface="in" units="micromolar"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>CaTn</ci>
+                </apply>
+                <apply>
+                    <times/>
+                    <ci>k_tn</ci>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <power/>
+                                <apply>
+                                    <divide/>
+                                    <ci>Ca</ci>
+                                    <ci>Ca50</ci>
+                                </apply>
+                                <ci>n_tn</ci>
+                            </apply>
+                            <apply>
+                                <minus/>
+                                <cn cellml:units="dimensionless">1</cn>
+                                <ci>CaTn</ci>
+                            </apply>
+                        </apply>
+                        <ci>CaTn</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>N</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <times/>
+                        <ci>k_0</ci>
+                        <ci>A</ci>
+                        <apply>
+                            <power/>
+                            <ci>CaTn</ci>
+                            <apply>
+                                <divide/>
+                                <apply>
+                                    <minus/>
+                                    <ci>n_Tm</ci>
+                                </apply>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k0</ci>
+                        <ci>N</ci>
+                        <apply>
+                            <power/>
+                            <ci>CaTn</ci>
+                            <apply>
+                                <divide/>
+                                <ci>n_Tm</ci>
+                                <cn cellml:units="dimensionless">2</cn>
+                            </apply>
+                        </apply>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="crossbridge_strain_and_states">
+        <variable initial_value="7e-3" name="B" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0" name="xB" public_interface="out" units="micrometre"/>
+        <variable initial_value="8e-3" name="C" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.01" name="xC" public_interface="out" units="micrometre"/>
+        <variable name="Z" units="dimensionless"/>
+        <variable name="A" public_interface="out" units="dimensionless"/>
+        <variable name="N" public_interface="in" units="dimensionless"/>
+        <variable name="k1" public_interface="in" units="per_second"/>
+        <variable name="k_1" public_interface="in" units="per_second"/>
+        <variable name="k2" public_interface="in" units="per_second"/>
+        <variable name="k_2" public_interface="in" units="per_second"/>
+        <variable name="k3" public_interface="in" units="per_second"/>
+        <variable name="k_3" public_interface="in" units="per_second"/>
+        <variable name="xC0" public_interface="in" units="micrometre"/>
+        <variable name="dL" public_interface="in" units="micrometre_per_second"/>
+        <variable name="L" public_interface="in" units="micrometre"/>
+        <variable initial_value="2.3" name="L_max" units="micrometre"/>
+        <variable initial_value="5" name="phi_l" units="dimensionless"/>
+        <variable initial_value="0.029" name="phi_v" units="dimensionless"/>
+        <variable name="time" public_interface="in" units="second"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>Z</ci>
+                <piecewise>
+                    <piece>
+                        <apply>
+                            <plus/>
+                            <cn cellml:units="dimensionless">1</cn>
+                            <apply>
+                                <times/>
+                                <ci>phi_l</ci>
+                                <apply>
+                                    <minus/>
+                                    <apply>
+                                        <divide/>
+                                        <ci>L</ci>
+                                        <ci>L_max</ci>
+                                    </apply>
+                                    <cn cellml:units="dimensionless">1</cn>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <apply>
+                            <lt/>
+                            <ci>L</ci>
+                            <ci>L_max</ci>
+                        </apply>
+                    </piece>
+                    <otherwise>
+                        <cn cellml:units="dimensionless">1</cn>
+                    </otherwise>
+                </piecewise>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>A</ci>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <minus/>
+                            <ci>Z</ci>
+                            <ci>N</ci>
+                        </apply>
+                        <ci>B</ci>
+                    </apply>
+                    <ci>C</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>B</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>k1</ci>
+                            <ci>A</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <plus/>
+                                <ci>k_1</ci>
+                                <ci>k2</ci>
+                            </apply>
+                            <ci>B</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k_2</ci>
+                        <ci>C</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>C</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <minus/>
+                        <apply>
+                            <times/>
+                            <ci>k2</ci>
+                            <ci>B</ci>
+                        </apply>
+                        <apply>
+                            <times/>
+                            <apply>
+                                <plus/>
+                                <ci>k_2</ci>
+                                <ci>k3</ci>
+                            </apply>
+                            <ci>C</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>k_3</ci>
+                        <ci>A</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>xB</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <times/>
+                                        <ci>A</ci>
+                                        <ci>k1</ci>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <ci>C</ci>
+                                        <ci>k_2</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                            <ci>B</ci>
+                        </apply>
+                        <ci>xB</ci>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>phi_v</ci>
+                        <ci>dL</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>xC</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <apply>
+                            <divide/>
+                            <apply>
+                                <minus/>
+                                <apply>
+                                    <plus/>
+                                    <apply>
+                                        <times/>
+                                        <ci>B</ci>
+                                        <ci>k2</ci>
+                                    </apply>
+                                    <apply>
+                                        <times/>
+                                        <ci>A</ci>
+                                        <ci>k_3</ci>
+                                    </apply>
+                                </apply>
+                            </apply>
+                            <ci>C</ci>
+                        </apply>
+                        <apply>
+                            <minus/>
+                            <ci>xC</ci>
+                            <ci>xC0</ci>
+                        </apply>
+                    </apply>
+                    <apply>
+                        <times/>
+                        <ci>phi_v</ci>
+                        <ci>dL</ci>
+                    </apply>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <component name="length_control">
+        <variable initial_value="0" name="IntF" units="kilopascal_second"/>
+        <variable initial_value="5e-5" name="nu" units="gigapascal_second_per_metre"/>
+        <variable initial_value="1e-5" name="m" units="gigapascal_second2_per_metre"/>
+        <variable initial_value="2.2" name="L0" units="micrometre"/>
+        <variable name="dL" public_interface="out" units="micrometre_per_second"/>
+        <variable initial_value="2.2" name="L" public_interface="out" units="micrometre"/>
+        <variable initial_value="12" name="F_after" units="kilopascal"/>
+        <variable name="time" public_interface="in" units="second"/>
+        <variable name="dIntF" units="kilopascal"/>
+        <variable name="Ft" public_interface="in" units="kilopascal"/>
+        <variable name="Lr" public_interface="in" units="micrometre"/>
+        <variable name="t_twitch" public_interface="in" units="second"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>dIntF</ci>
+                <apply>
+                    <minus/>
+                    <ci>F_after</ci>
+                    <ci>Ft</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>IntF</ci>
+                </apply>
+                <apply>
+                    <minus/>
+                    <ci>F_after</ci>
+                    <ci>Ft</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>dL</ci>
+                <apply>
+                    <min/>
+                    <apply>
+                        <divide/>
+                        <apply>
+                            <plus/>
+                            <ci>IntF</ci>
+                            <apply>
+                                <times/>
+                                <ci>nu</ci>
+                                <apply>
+                                    <minus/>
+                                    <ci>Lr</ci>
+                                    <ci>L</ci>
+                                </apply>
+                            </apply>
+                        </apply>
+                        <ci>m</ci>
+                    </apply>
+                    <cn cellml:units="micrometre_per_second">0</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>L</ci>
+                </apply>
+                <ci>dL</ci>
+            </apply>
+        </math>
+    </component>
+    <component name="model_parameters">
+        <variable initial_value="0.01" name="xC0" public_interface="out" units="micrometre"/>
+        <variable initial_value="1e-3" name="Pi" public_interface="out" units="molar"/>
+        <variable initial_value="5e-3" name="ATP" public_interface="out" units="molar"/>
+    </component>
+    <connection>
+        <map_components component_1="thin_filament_regulation" component_2="environment"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="crossbridge_strain_and_states" component_2="environment"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="force_generation" component_2="environment"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="Ca_transient" component_2="environment"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="length_control" component_2="environment"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="force_generation" component_2="crossbridge_strain_and_states"/>
+        <map_variables variable_1="B" variable_2="B"/>
+        <map_variables variable_1="C" variable_2="C"/>
+        <map_variables variable_1="xB" variable_2="xB"/>
+        <map_variables variable_1="xC" variable_2="xC"/>
+    </connection>
+    <connection>
+        <map_components component_1="crossbridge_cycling_rates" component_2="crossbridge_strain_and_states"/>
+        <map_variables variable_1="xB" variable_2="xB"/>
+        <map_variables variable_1="xC" variable_2="xC"/>
+        <map_variables variable_1="k1" variable_2="k1"/>
+        <map_variables variable_1="k_1" variable_2="k_1"/>
+        <map_variables variable_1="k2" variable_2="k2"/>
+        <map_variables variable_1="k_2" variable_2="k_2"/>
+        <map_variables variable_1="k3" variable_2="k3"/>
+        <map_variables variable_1="k_3" variable_2="k_3"/>
+    </connection>
+    <connection>
+        <map_components component_1="crossbridge_cycling_rates" component_2="model_parameters"/>
+        <map_variables variable_1="Pi" variable_2="Pi"/>
+        <map_variables variable_1="ATP" variable_2="ATP"/>
+        <map_variables variable_1="xC0" variable_2="xC0"/>
+    </connection>
+    <connection>
+        <map_components component_1="thin_filament_regulation" component_2="crossbridge_strain_and_states"/>
+        <map_variables variable_1="A" variable_2="A"/>
+        <map_variables variable_1="N" variable_2="N"/>
+    </connection>
+    <connection>
+        <map_components component_1="thin_filament_regulation" component_2="Ca_transient"/>
+        <map_variables variable_1="Ca" variable_2="Ca"/>
+    </connection>
+    <connection>
+        <map_components component_1="crossbridge_strain_and_states" component_2="model_parameters"/>
+        <map_variables variable_1="xC0" variable_2="xC0"/>
+    </connection>
+    <connection>
+        <map_components component_1="force_generation" component_2="length_control"/>
+        <map_variables variable_1="dL" variable_2="dL"/>
+        <map_variables variable_1="L" variable_2="L"/>
+        <map_variables variable_1="Ft" variable_2="Ft"/>
+        <map_variables variable_1="Lr" variable_2="Lr"/>
+    </connection>
+    <connection>
+        <map_components component_1="crossbridge_strain_and_states" component_2="length_control"/>
+        <map_variables variable_1="dL" variable_2="dL"/>
+        <map_variables variable_1="L" variable_2="L"/>
+    </connection>
+    <connection>
+        <map_components component_1="Ca_transient" component_2="length_control"/>
+        <map_variables variable_1="t_twitch" variable_2="t_twitch"/>
+    </connection>
+</model>
