@@ -1,4 +1,6 @@
-% This script plots all of the figures for the paper: "". 
+% This script plots all of the figures for the paper: "Metabolite-sensitive 
+% cross-bridge models of human atria reveal the impact of diabetes on 
+% muscle mechanoenergetics" - Musgrave et al. (2025). 
 
 % Requires the following data files:
 % - ave_human_fitting_data.mat - to plot the model fits to data
