@@ -5,7 +5,7 @@
 % Date: May 2024
 
 function[]=full_sensitivity_for_paper(diabetic)
-model=@Mmodel_2024_Human;
+model=@Mmodel_2025_Human;
 
 
 global isotonic;
