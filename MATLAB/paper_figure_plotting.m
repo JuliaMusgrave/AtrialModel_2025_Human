@@ -26,6 +26,7 @@
 clear
 
 %% Figure2 - Passive model fit
+disp('Plotting the passive models with experimental data...')
 red=[0.85,0.325,0.098];
 
 figure('Position',[149,110,792,205])
@@ -90,6 +91,7 @@ box off
 text(0.827,max(ylim),'C','FontSize',16,'FontWeight','bold')
 
 %% Figure 3 - plot Ca inputs
+disp('Plotting the Ca2+ inputs driving the models...')
 
 figure('Position',[100, 100,411,285])
 
@@ -108,6 +110,8 @@ legend('Non-diabetic','Diabetic')
 ylim([0 0.6])
 
 %% Figure 4: plotting fits for both XB models
+disp('Plotting the cross-bridge models with experimental data...')
+
 load('ave_human_fitting_data.mat', 'D_xb_data','ND_xb_data','freqs')
 
 freqs=freqs(1:11); % didn't fit to 100 Hz
@@ -173,6 +177,7 @@ end
 
 
 %% Figure 5: Isometric twitch - trabecula/muscle vs myocyte model
+disp('Running isometric twitch simulations for muscle and myocyte models...')
 
 red=[0.85,0.325,0.098];
 
@@ -284,6 +289,7 @@ n_sys=max(F_twitch(:,1));
 % d_sys/n_sys
 
 %% Figure 6 & 7: Work loops - baseline w complete models
+disp('Running work-loop simulations for muscle models...')
 
 red=[0.85,0.325,0.098];
 
@@ -396,6 +402,8 @@ text(-0.25,max(ylim),'F','FontSize',18,'FontWeight','bold')
 
 
 %% Figure 8: Raised Pi
+disp('Running isometric and work-loop simulations at 10 different Pi concentrations...')
+
 clear F_twitch max_eff max_energy max_pow max_short max_vel max_work
 red=[0.85,0.325,0.098];
 
@@ -533,6 +541,7 @@ xlabel('[P_i] (mM)')
 % n10_amp/n1_amp
 
 %% Figure 9: Lowered ATP
+disp('Running isometric and work-loop simulations at 10 different ATP concentrations...')
 
 clear F_twitch max_eff max_energy max_pow max_short max_vel max_work
 red=[0.85,0.325,0.098];
@@ -671,6 +680,8 @@ text(-3,max(ylim),'G','FontSize',12,'FontWeight','bold')
 % n1_t/n5_t
 
 %% Figure 10: XB/Ca model matrix
+disp('Running isometric and work-loop simulations for altered versions of the model...')
+
 bf=colororder;
 [blue, red, green, purple]=deal(bf(1,:),bf(2,:),bf(5,:),bf(4,:));
 
@@ -854,7 +865,7 @@ text(-0.25,max(ylim),'G','FontSize',12,'FontWeight','bold')
 % c_t/n_t
 
 %% Figure 11: muscle sensitivity analysis
-
+disp('Running isometric and work-loop simulations for a sensitivity analysis (25 times)...')
 full_sensitivity_for_paper(false)
 
 %% helper functions
